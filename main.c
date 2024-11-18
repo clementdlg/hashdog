@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 		printf("This program performs attacks on a hashed password\n");
 		printf("It takes the following arguments :\n");
 		printf("1 - Method : 'dict', 'rainbow', 'bruteforce', \n");
-		printf("2 - text file input. Required for 'dict' methods\n");
+		printf("2 - Method options :\n    'dict' -> wordlist.txt required\n    'bruteforce' -> nlus\n");
 		printf("3 - Hashed password\n");
 		printf("4 - Hashing algorithm (md5, sha256)\n");
 		exit(0);
@@ -26,11 +26,12 @@ int main(int argc, char** argv) {
 	strcpy(target, argv[3]);
 	strcpy(algo, argv[4]);
 
+	printf("Target : %s\n", target);
+	printf("Algorithm : %s\n", algo);
+
 	// choice tree
 	if (strcmp(argv[1], "dict\n") != 0) {
-		printf("Method : Dictionnary Attack\n");
-		printf("Target : %s\n", target);
-		printf("Algorithm : %s\n", algo);
+		printf("Method : Dictionary Attack\n");
 		dict_atk(dict, algo, target);
 
 	} else  if (strcmp(argv[1], "rainbow\n") != 0) {
@@ -61,7 +62,7 @@ int dict_atk(char dict[255], char algo[7], char target[255]){
 	unsigned short bSize = 255;
 	char buffer[bSize];
 	unsigned int count = 0;
-
+	char* hash;
 	// setting a ptr to the data
 	FILE *pDict = fopen(dict, "r");
 
@@ -77,21 +78,26 @@ int dict_atk(char dict[255], char algo[7], char target[255]){
 		count++;
 
 		if (strcasecmp(algo, "sha256") == 0) {
-			char* hash = malloc(SHA256_DIGEST_LENGTH * 2 + 1);
+			hash = malloc(SHA256_DIGEST_LENGTH * 2 + 1);
 			if (hash == NULL) {
 				printf("Error: Memory allocation failed\n");
 			}
 			sha_hash(buffer, hash);
-			if (strcasecmp(hash, target) == 0) {
-				printf("Tried : %u words\n", count);
-				printf("Found password : %s\n", buffer);
-				return 0;
-			}
 		}
+		if (strcasecmp(hash, target) == 0) {
+			printf("Tried : %u words\n", count);
+			printf("Found password : %s\n", buffer);
+			free(hash);
+			return 0;
+		}
+		free(hash);
 
 	}
 	printf("Tried : %u words\n", count);
-	printf("Found 0 match\n", count);
+	printf("Found 0 match\n");
 	fclose(pDict);
 	return 0;
+}
+
+int bruteforce_atk() {
 }
