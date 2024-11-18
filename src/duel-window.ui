@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="Adw" version="1.0"/>
+  <requires lib="Adw" version="1.6"/>
 
   <template class="DuelWindow" parent="AdwApplicationWindow">
     <property name="default-width">600</property>
@@ -26,7 +26,7 @@
 
             <property name="title-widget">
               <object class="AdwWindowTitle">
-                <property name="title" translatable="no">Random</property>
+                <property name="title" translatable="no">HashCracker</property>
               </object>
             </property>
 
@@ -42,8 +42,9 @@
 
             <child>
               <object class="AdwStatusPage" id="home_page">
-                <property name="title">Welcome</property>
-                <property name="description">Let's Play "Rock Paper Scissors"</property>
+                <property name="icon-name">dialog-password-symbolic</property>
+                <property name="title">Insert a hash</property>
+                <property name="description">I will attempt to find its associated string</property>
                 <property name="vexpand">true</property>
 
                 <!-- AdwClamp -->
@@ -51,84 +52,15 @@
                   <object class="AdwClamp">
                     <property name="maximum-size">250</property>
 
-                    <!-- ButtonsBox -->
+                    <!-- TextEntryBox -->
                     <child>
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-
-                        <!-- RockButton -->
-                        <child>
-                          <object class="GtkButton" id="rock_button">
-                            <property name="action-name">win.rock</property>
-
-                            <child>
-                              <object class="AdwButtonContent">
-                                <property name="label">Rock!</property>
-                                <property name="icon-name">rock_simple</property>
-                                <property name="halign">center</property>
-                              </object>
-                            </child>
-
-                            <style>
-                              <class name="pill"/>
-                              <class name="rock_button"/>
-                              <class name="opaque"/>
-                            </style>
-
-                          </object>
-                        </child>
-
-                        <!-- PaperButton -->
-                        <child>
-                          <object class="GtkButton" id="paper_button">
-                            <property name="action-name">win.paper</property>
-
-                            <child>
-                              <object class="AdwButtonContent">
-                                <property name="label">Paper!</property>
-                                <property name="icon-name">paper_simple</property>
-                                <property name="halign">center</property>
-                              </object>
-                            </child>
-
-                            <style>
-                              <class name="pill"/>
-                              <class name="paper_button"/>
-                              <class name="opaque"/>
-                            </style>
-
-                          </object>
-                        </child>
-
-                        <!-- ScissorsButton -->
-                        <child>
-                          <object class="GtkButton" id="scissors_button">
-                            <property name="action-name">win.scissors</property>
-
-                            <child>
-                              <object class="AdwButtonContent">
-                                <property name="label">Scissors!</property>
-                                <property name="icon-name">scissors_simple</property>
-                                <property name="halign">center</property>
-                              </object>
-                            </child>
-
-                            <style>
-                              <class name="pill"/>
-                              <class name="scissors_button"/>
-                              <class name="opaque"/>
-                            </style>
-
-                          </object>
-                        </child>
-
-
+                      <object class="GtkEntry" id="text_entry">
+                        <property name="placeholder-text" translatable="yes">Type your hash here...</property>
                       </object>
                     </child>
 
                   </object>
                 </child>
-
 
               </object>
             </child>
@@ -144,7 +76,6 @@
                     <child>
                       <object class="GtkButton" id="replay_button">
                         <property name="action-name">win.replay</property>
-
 
                         <style>
                           <class name="pill"/>
@@ -169,15 +100,12 @@
               </object>
             </child>
 
-
           </object>
         </child>
-
 
       </object>
     </child>
   </template>
-
 
   <menu id="primary_menu">
     <section>
@@ -189,10 +117,7 @@
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">win.show-help-overlay</attribute>
       </item>
-      <item>
-        <attribute name="label" translatable="yes">_About Duel</attribute>
-        <attribute name="action">app.about</attribute>
-      </item>
     </section>
   </menu>
 </interface>
+
