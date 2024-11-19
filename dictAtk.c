@@ -40,7 +40,12 @@ int dictAtk(char dict[255], char algo[7], char target[255]){
 				printf("Error: Memory allocation failed\n");
 			}
 			sha_hash(buffer, hash);
+
+		} else if (strcasecmp(algo, "md5") == 0) {
+			printf("Not implemented yet\n");
+			return 1;
 		}
+
 		if (strcasecmp(hash, target) == 0) {
 			printf("Tried : %u words\n", count);
 			printf("Found password : %s\n", buffer);

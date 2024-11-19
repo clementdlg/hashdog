@@ -24,7 +24,6 @@ int main(int argc, char** argv) {
 	char target[255];
 	char algo[7];
 
-
 	// store arguments
 	strcpy(options, argv[2]);
 	strcpy(target, argv[3]);
@@ -50,6 +49,7 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
+	printf("\n");
 	// choice tree
 	if (strcmp(argv[1], "dict") == 0) {
 		printf("Method : Dictionary Attack\n");
