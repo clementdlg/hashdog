@@ -5,20 +5,24 @@
 #include <openssl/sha.h>
 
 // internal libs
-#include "checkDigest.h"
-#include "dictAtk.h"
+#include "functions.h"
 
 int dictAtk(char dict[255], char algo[7], char target[255]);
 int bruteforceAtk(char options[255], char algo[7], char target[255]);
 int sha_hash(char *str, char *hash);
 int printHelp();
 
+//./main -m dict -o rockyou.txt -a sha256 -h CCAB7857A585ABC
 int main(int argc, char** argv) {
-	// exit if argc is invalid
-	if (argc != 5) {
+	
+	// exit if no args
+	if (argc == 1) {
 		printHelp();
 		exit(0);
 	}
+
+	argParser(argc, argv);
+	/*
 
 	char options[255];
 	char target[255];
@@ -66,30 +70,26 @@ int main(int argc, char** argv) {
 		dictAtk(options, algo, target);
 
 	} else { printf("Error : Unavailable method '%s'\n", argv[1]); }
+	*/
 
 	return 0;
 }
 
 
-// int bruteforceAtk(char options[255], char algo[7], char target[255]) {
-// 	
-// 	return 0;
-// }
-
 int printHelp() {
 	printf("This program performs attacks on a hashed password\n");
 	printf("It takes the following arguments :\n");
-	printf("1] Method :\n");
-	printf("    'dict', 'rainbow' or 'bruteforce'\n");
+	printf("-m : Method\n");
+	printf("    'dict', 'rainbow' or 'bruteforce'\n\n");
 
-	printf("2] Method Options :\n");
+	printf("-p : Hashed password\n\n");
+	printf("-a : Hashing algorithm ('md5' or 'sha256')\n\n");
+	printf("-o : Options :\n");
 	printf("  - For dict method, provide a wordlist file\n");
 	printf("  - For bruteforce method, provide a charcter-set\n");
 	printf("    'n' for numbers, 'l' for lowercase, 'u' for uppercase, 's' for symbols\n");
-	printf("    Example : nsl for number + symbols + lowercase characters\n");
+	printf("    Example : nsl for number + symbols + lowercase characters\n\n");
 
-	printf("3] Hashed password\n");
-	printf("4] Hashing algorithm ('md5' or 'sha256')\n");
 	return 0;
 }
 
