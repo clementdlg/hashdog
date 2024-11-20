@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 	unsigned short nbFlag = 4;
 	char* used = malloc(sizeof(char) * nbFlag + 1);
 	char** values = malloc(sizeof(char*) * nbFlag);
-
+	unsigned short algo, passw, options, method;
 	// exit if no args
 	if (argc == 1) {
 		printHelp();
@@ -23,36 +23,28 @@ int main(int argc, char** argv) {
 	}
 
 	argParser(argc, argv, used, values, nbFlag);
-	// debug
-	for (int i = 0; i < strlen(used); ++i) {
-		printf("%c : %s\n", used[i], values[i]);
-	}
-	/*
 
-	char options[255];
-	char target[255];
-	char algo[7];
-
-	// store arguments
-	strcpy(options, argv[2]);
-	strcpy(target, argv[3]);
-	strcpy(algo, argv[4]);
+	// assigning indices
+	algo = strchr(used, 'a') - used;
+	passw = strchr(used, 'p') - used;
+	method = strchr(used, 'm') - used;
+	options = strchr(used, 'o') - used;
 
 	// # check arguments
 	// check algo
-	if (strcasecmp(algo, "sha256") != 0 && strcasecmp(algo, "md5") != 0) {
+	if (strcasecmp(values[algo], "sha256") != 0 && strcasecmp(values[algo], "md5") != 0) {
 		printf("Error : Invalid algorithm '%s'\n", algo);
 		exit(1);
 	}
 
 	// check digest length
-	if (checkDigest(algo, target) != 0) {
+	if (checkDigest(values[algo], values[passw]) != 0) {
 		printf("Error : Invalid hash length\n");
 		exit(1);
 	}
 
 	// check digest charset
-	char ret = checkDigestCharset(target);
+	char ret = checkDigestCharset(values[passw]);
 	if (ret != 0 ){
 		printf("Error: Invalid character '%c' in hash\n", ret);
 		exit(1);
@@ -60,22 +52,21 @@ int main(int argc, char** argv) {
 
 	printf("\n");
 	// choice tree
-	if (strcmp(argv[1], "dict") == 0) {
+	if (strcmp(values[method], "dict") == 0) {
 		printf("Method : Dictionary Attack\n");
-		printf("Target : %s\n", target);
-		printf("Algorithm : %s\n\n", algo);
-		dictAtk(options, algo, target);
+		printf("Target : %s\n", values[passw]);
+		printf("Algorithm : %s\n\n", values[algo]);
+		dictAtk(values[options], values[algo], values[passw]);
 
-	} else  if (strcmp(argv[1], "rainbow") == 0) {
+	} else  if (strcmp(values[method], "rainbow") == 0) {
 
 		printf("Method : Rainbow table Attack\n");
 
-	} else  if (strcmp(argv[1], "bruteforce") == 0) {
+	} else  if (strcmp(values[method], "bruteforce") == 0) {
 		printf("Method : Bruteforce Attack\n");
-		dictAtk(options, algo, target);
+		dictAtk(values[options], values[algo], values[passw]);
 
-	} else { printf("Error : Unavailable method '%s'\n", argv[1]); }
-	*/
+	} else { printf("Error : Unavailable method '%s'\n", values[method]); }
 
 	return 0;
 }

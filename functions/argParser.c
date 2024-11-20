@@ -6,7 +6,7 @@
  *		   array of strings (type char**) and max number of flags
  *
  * Output : int 0
-*/
+ */
 int argParser(int argc, char** argv, char* used, char** values, int nbFlag) {
 	char* args = "aomp";
 	unsigned int flagCount = 0;
