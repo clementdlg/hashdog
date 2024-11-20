@@ -1,1 +1,1 @@
-gcc main.c checkDigest.c dictAtk.c argParser.c -o hashdog -lcrypto
+gcc main.c functions/* -o hashdog -lcrypto

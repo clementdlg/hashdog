@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-int argParser(int argc, char** argv) {
-	unsigned short nbFlag = 4;
+/* Input : main function argument-count and argument-value
+ *		   array of strings (type char**) and max number of flags
+ *
+ * Output : int 0
+*/
+int argParser(int argc, char** argv, char* used, char** values, int nbFlag) {
 	char* args = "aomp";
-	char* used = malloc(sizeof(char) * nbFlag + 1);
 	unsigned int flagCount = 0;
-
-	// store the values
-	char* values[nbFlag];
 
 	if (used == NULL) {
 		printf("Error: Memory allocation failed\n");
@@ -32,17 +32,13 @@ int argParser(int argc, char** argv) {
 			values[flagCount] = (char*) malloc(strlen(argv[i + 1]) + 1);
 			strcpy(values[flagCount], argv[i + 1]);
 
-			// increment index
 			flagCount++;
+
 			// break if all flags are already used
 			if (flagCount == nbFlag) { 
 				break;
 			}
 		}
-	}
-	// debug
-	for (int i = 0; i < strlen(used); ++i) {
-		printf("%c : %s\n", used[i], values[i]);
 	}
 
 	return 0;

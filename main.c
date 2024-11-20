@@ -7,21 +7,26 @@
 // internal libs
 #include "functions.h"
 
-int dictAtk(char dict[255], char algo[7], char target[255]);
-int bruteforceAtk(char options[255], char algo[7], char target[255]);
-int sha_hash(char *str, char *hash);
 int printHelp();
 
 //./main -m dict -o rockyou.txt -a sha256 -h CCAB7857A585ABC
 int main(int argc, char** argv) {
 	
+	unsigned short nbFlag = 4;
+	char* used = malloc(sizeof(char) * nbFlag + 1);
+	char** values = malloc(sizeof(char*) * nbFlag);
+
 	// exit if no args
 	if (argc == 1) {
 		printHelp();
 		exit(0);
 	}
 
-	argParser(argc, argv);
+	argParser(argc, argv, used, values, nbFlag);
+	// debug
+	for (int i = 0; i < strlen(used); ++i) {
+		printf("%c : %s\n", used[i], values[i]);
+	}
 	/*
 
 	char options[255];
