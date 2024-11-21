@@ -9,31 +9,56 @@
 
 int printHelp();
 
-//./main -m dict -o rockyou.txt -a sha256 -h CCAB7857A585ABC
 int main(int argc, char** argv) {
 	
-	unsigned short nbFlag = 4;
-	char* used = malloc(sizeof(char) * nbFlag + 1);
-	char** values = malloc(sizeof(char*) * nbFlag);
-	unsigned short algo, passw, options, method;
+	char args[] = {'a', 'o', 'm', 'p'};
+	unsigned short nbFlag = sizeof(args);
+	char** values = malloc(nbFlag * sizeof(char*));
+
+	// temporary fallback values :
+	char* fallback[] = {"sha256", "wordlists/rockyou.txt", "dict", ""};
+	if (values == NULL) {
+		printf("Error : Memory allocation failed\n");
+	}
+
 	// exit if no args
 	if (argc == 1) {
 		printHelp();
 		exit(0);
 	}
 
-	argParser(argc, argv, used, values, nbFlag);
+	argParser(argc, argv, args, values, nbFlag);
 
-	// assigning indices
-	algo = strchr(used, 'a') - used;
-	passw = strchr(used, 'p') - used;
-	method = strchr(used, 'm') - used;
-	options = strchr(used, 'o') - used;
+	// falling back on default values
+	for (unsigned short i = 0; i < nbFlag; i++) {
 
+		// if user did not provided an argument
+		if (values[i] == NULL && strlen(fallback[i]) != 0) {
+
+			// allocate memory for the value
+			values[i] = malloc(strlen(fallback[i] + 1));
+	
+			if (values[i] == NULL) {
+				printf("Error: Memory allocation failed\n");
+			}
+
+			// copy the default value to it
+			strcpy(values[i], fallback[i]);
+		}
+	}
+	//debug
+	for (unsigned short i = 0; i < nbFlag; i++) {
+		if (values[i] != NULL) {
+			printf("values[%c] = %s\n", args[i], values[i]);
+		}
+	}
+
+	/*
 	// # check arguments
 	// check algo
 	if (strcasecmp(values[algo], "sha256") != 0 && strcasecmp(values[algo], "md5") != 0) {
-		printf("Error : Invalid algorithm '%s'\n", algo);
+		// printf("Error : Invalid algorithm '%s'\n", values[algo]);
+		printf("invalid algo\n");
 		exit(1);
 	}
 
@@ -69,6 +94,7 @@ int main(int argc, char** argv) {
 	} else { printf("Error : Unavailable method '%s'\n", values[method]); }
 
 	return 0;
+	*/
 }
 
 

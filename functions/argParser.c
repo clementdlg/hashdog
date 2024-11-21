@@ -7,9 +7,10 @@
  *
  * Output : int 0
  */
-int argParser(int argc, char** argv, char* used, char** values, int nbFlag) {
-	char* args = "aomp";
+int argParser(int argc, char** argv, char args[], char* values[], int nbFlag) {
 	unsigned int flagCount = 0;
+	unsigned short valIndex;
+	char* used = malloc(sizeof(char) * nbFlag + 1);
 
 	if (used == NULL) {
 		printf("Error: Memory allocation failed\n");
@@ -28,9 +29,17 @@ int argParser(int argc, char** argv, char* used, char** values, int nbFlag) {
 			// add flag to 'used'
 			strcat(used, &argv[i][1]);
 
-			// copy value to array
-			values[flagCount] = (char*) malloc(strlen(argv[i + 1]) + 1);
-			strcpy(values[flagCount], argv[i + 1]);
+			// the position of the letter inside the 'args' string
+			valIndex = strchr(args, argv[i][1]) - args;
+
+			// allocate the size of the argument (argv[i + 1])
+			values[valIndex] = (char*) malloc(strlen(argv[i + 1]) + 1);
+			if (values[valIndex] == NULL) {
+				printf("Error : Memory allocation failed\n");
+			}
+
+			// copy the value
+			strcpy(values[valIndex], argv[i + 1]);
 
 			flagCount++;
 
