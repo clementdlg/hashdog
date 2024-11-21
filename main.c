@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	for (unsigned short i = 0; i < nbFlag; i++) {
 
 		// if user did not provided an argument
-		if (values[i] == NULL && strlen(fallback[i]) != 0) {
+		if (values[i] == NULL ) {
 
 			// allocate memory for the value
 			values[i] = malloc(strlen(fallback[i] + 1));
@@ -53,23 +53,21 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	/*
 	// # check arguments
 	// check algo
-	if (strcasecmp(values[algo], "sha256") != 0 && strcasecmp(values[algo], "md5") != 0) {
-		// printf("Error : Invalid algorithm '%s'\n", values[algo]);
-		printf("invalid algo\n");
+	if (strcasecmp(values[0], "sha256") != 0 && strcasecmp(values[0], "md5") != 0) {
+		printf("Error : Invalid algorithm '%s'\n", values[0]);
 		exit(1);
 	}
 
 	// check digest length
-	if (checkDigest(values[algo], values[passw]) != 0) {
+	if (checkDigest(values[0], values[3]) >= 0) {
 		printf("Error : Invalid hash length\n");
 		exit(1);
 	}
 
 	// check digest charset
-	char ret = checkDigestCharset(values[passw]);
+	char ret = checkDigestCharset(values[3]);
 	if (ret != 0 ){
 		printf("Error: Invalid character '%c' in hash\n", ret);
 		exit(1);
@@ -77,24 +75,23 @@ int main(int argc, char** argv) {
 
 	printf("\n");
 	// choice tree
-	if (strcmp(values[method], "dict") == 0) {
+	if (strcmp(values[2], "dict") == 0) {
 		printf("Method : Dictionary Attack\n");
-		printf("Target : %s\n", values[passw]);
-		printf("Algorithm : %s\n\n", values[algo]);
-		dictAtk(values[options], values[algo], values[passw]);
+		printf("Target : %s\n", values[3]);
+		printf("Algorithm : %s\n\n", values[0]);
+		dictAtk(values[1], values[0], values[3]);
 
-	} else  if (strcmp(values[method], "rainbow") == 0) {
+	} else  if (strcmp(values[2], "rainbow") == 0) {
 
 		printf("Method : Rainbow table Attack\n");
 
-	} else  if (strcmp(values[method], "bruteforce") == 0) {
+	} else  if (strcmp(values[2], "bruteforce") == 0) {
 		printf("Method : Bruteforce Attack\n");
-		dictAtk(values[options], values[algo], values[passw]);
+		dictAtk(values[1], values[0], values[3]);
 
-	} else { printf("Error : Unavailable method '%s'\n", values[method]); }
+	} else { printf("Error : Unavailable method '%s'\n", values[2]); }
 
 	return 0;
-	*/
 }
 
 
