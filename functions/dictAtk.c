@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "../functions.h"
+
 int sha_hash(char *str, char *hash) {
     unsigned char buff[SHA256_DIGEST_LENGTH]; 
 
@@ -14,6 +16,20 @@ int sha_hash(char *str, char *hash) {
     hash[SHA256_DIGEST_LENGTH * 2] = '\0';
     return 0;
 }
+
+// int md5_hash(char *str, char *hash) {
+// 	unsigned char buff[MD5_DIGEST_LENGTH]; 
+//
+// 	// Calculer le hachage MD5
+// 	MD5((unsigned char *)str, strlen(str), buff);
+//
+// 	// Convertir le hachage en une chaîne hexadécimale
+// 	for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
+// 		sprintf(hash + (i * 2), "%02x", buff[i]);
+// 	}
+// 	hash[MD5_DIGEST_LENGTH * 2] = '\0';  // Ajouter le caractère de fin de chaîne
+// 	return 0;
+// }
 
 int dictAtk(char dict[255], char algo[7], char target[255]){
 	unsigned short bSize = 255;
@@ -41,9 +57,13 @@ int dictAtk(char dict[255], char algo[7], char target[255]){
 			}
 			sha_hash(buffer, hash);
 
-		} else if (strcasecmp(algo, "md5") == 0) {
-			printf("Not implemented yet\n");
-			return 1;
+		// } else if (strcasecmp(algo, "md5") == 0) {
+		// 	char* hash = malloc(MD5_DIGEST_LENGTH * 2 + 1);
+		// 	if (hash == NULL) {
+		// 		printf("Error: Memory allocation failed\n");
+		// 	}
+		// 	md5_hash(buffer, hash);
+		//
 		}
 
 		if (strcasecmp(hash, target) == 0) {

@@ -9,7 +9,6 @@
 
 int printHelp();
 
-//./main -m dict -o rockyou.txt -a sha256 -h CCAB7857A585ABC
 int main(int argc, char** argv) {
 	
 	unsigned short nbFlag = 4;
