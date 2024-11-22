@@ -15,6 +15,15 @@ int main(int argc, char** argv) {
 	unsigned short nbFlag = sizeof(args);
 	char** values = malloc(nbFlag * sizeof(char*));
 
+	// check for config file
+	FILE* config = fopen("config.yaml", "r");
+
+	if (config == NULL) {
+		printf("Error: No 'config.yaml' file found\n");
+		exit(1);
+	} 
+	configParser(config);
+
 	// temporary fallback values :
 	char* fallback[] = {"sha256", "wordlists/rockyou.txt", "dict", ""};
 	if (values == NULL) {
@@ -23,7 +32,7 @@ int main(int argc, char** argv) {
 
 	// exit if no args
 	if (argc == 1) {
-		printHelp();
+		// printHelp();
 		exit(0);
 	}
 

@@ -12,4 +12,4 @@ attack:
 gui:
   darkmode: true
   extraInfo: false
-path : "."
+outputPath : "."
