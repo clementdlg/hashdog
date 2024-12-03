@@ -7,8 +7,8 @@
  *
  * Output : int 0
  */
-int argParser(int argc, char** argv, char args[], char* values[], int nbFlag) {
-	unsigned int flagCount = 0;
+int argParser(int argc, char** argv, char args[], char* values[], unsigned short nbFlag) {
+	unsigned short flagCount = 0;
 	unsigned short valIndex;
 	char* used = malloc(sizeof(char) * nbFlag + 1);
 
