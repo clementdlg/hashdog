@@ -1,0 +1,31 @@
+{
+    "emptyKey": "",
+    "stringKey": "This is a string",
+    "numberKey": 123,
+    "negativeNumberKey": -45.67,
+    "largeNumberKey": 1.7976931348623157e+308,
+    "booleanTrue": true,
+    "booleanFalse": false,
+    "nullValue": null,
+    "arrayKey": [
+        "string in array",
+        123,
+        true,
+        null,
+        { "nestedObjectInArray": "value" },
+        [1, 2, 3]
+    ],
+    "objectKey": {
+        "nestedString": "Nested string",
+        "nestedNumber": 42,
+        "nestedArray": [false, null, "text"],
+        "deepNestedObject": {
+            "deepKey": "deepValue"
+        }
+    },
+    "escapedCharacters": "Quotes: \"Double\" and 'Single', Backslash: \\, Newline: \n, Tab: \t",
+    "emptyObject": {},
+    "emptyArray": [],
+    "keyWithSpaces": "Value with spaces",
+}
+
