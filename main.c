@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 		printf("Error: No 'config.yaml' file found\n");
 		exit(1);
 	} 
-	configParser(config);
+	// configParser(config);
 
 	// temporary fallback values :
 	char* fallback[] = {"sha256", "wordlists/rockyou.txt", "dict", ""};
