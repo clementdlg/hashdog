@@ -4,7 +4,8 @@ SRC		=	main.c						\
 			functions/argParser.c		\
 			functions/bruteforceAtk.c	\
 			functions/checkDigest.c		\
-			functions/dictAtk.c
+			functions/dictAtk.c			\
+			functions/configParser.c
 
 OBJ		=	$(SRC:.c=.o)
 
