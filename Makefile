@@ -9,7 +9,7 @@ SRC		=	main.c						\
 
 OBJ		=	$(SRC:.c=.o)
 
-CFLAGS	=	-Wall -Wextra -iquote include
+CFLAGS	=	-Wall #-Wextra -iquote include
 LDFLAGS	=	-lcrypto
 
 all:	$(NAME)
