@@ -1,0 +1,18 @@
+# Gui settings
+gui.darkmode=true
+gui.extraInfo=false
+
+# Attack settings
+attack.mode="dict"
+attack.salt=""
+attack.algorithm="sha256"
+
+# Bruteforce settings
+bruteforce.timeout=600
+bruteforce.length.max=20
+bruteforce.length.min=0
+bruteforce.charset="lnu"
+
+# Default paths
+path.wordlist="wordlists/rockyou.txt"
+path.output="."
