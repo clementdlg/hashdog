@@ -1,5 +1,5 @@
 # Gui settings
-gui.mode="dark"
+gui.mode="dark"#comment
 gui.info=false
 
 # Attack settings
