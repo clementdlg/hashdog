@@ -16,10 +16,10 @@ int main(int argc, char** argv) {
 	char** values = malloc(nbFlag * sizeof(char*));
 
 	// check for config file
-	FILE* config = fopen("test.json", "r");
+	FILE* config = fopen("config", "r");
 
 	if (config == NULL) {
-		printf("Error: No 'config.json' file found\n");
+		printf("Error: No config file found\n");
 		exit(1);
 	} 
 	configParser(config);

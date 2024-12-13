@@ -1,6 +1,6 @@
 # Gui settings
-gui.darkmode=true
-gui.extraInfo=false
+gui.mode="dark"
+gui.info=false
 
 # Attack settings
 attack.mode="dict"
