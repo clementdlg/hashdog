@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-short validateCharset(char* line);
+char validateValueCharset(char* line);
+char validateKey(char* line);
+char* cleanValue(char* value);
 
 int configParser(FILE* config) {
 	unsigned short len = 200;
@@ -10,63 +12,92 @@ int configParser(FILE* config) {
 	char* key = malloc(sizeof(char) * 100);
 	char* value = malloc(sizeof(char) * 100);
 	char* pDelimiter;
-	int delimiter;
+	int index;
+	char ret;
 	unsigned int n = 0;
 
 	while(fgets(line, len, config)) {
 		n++;
-		// strcpy(key, "");
-		// strcpy(value, "");
+		strcpy(key, "");
+		strcpy(value, "");
 		
 		// detect comments and empty lines
 		if (line[0] == '#' || line[0] == '\n') {
 			continue;
 		}
-		// if (validateCharset(line) == 1) {
-		// 	printf("Error: Invalid charset in config file\n");
-		// 	return 1;
-		// }
+
+		// checking for a '='
 		pDelimiter = strchr(line, '=');
 		if (pDelimiter == NULL) {
 			printf("[Config Error](line %u) No key=value pair found in config\n", n);
 			return 1;
 		}
-		delimiter = pDelimiter - line;
-		strncpy(key, line, delimiter);
-		key[strlen(key) - 1] = '\0';
+		// index of the '='
+		index = pDelimiter - line;
+		strncpy(key, line, index);
+
+		// adding null-byte to end the string
+		key[index] = '\0';
+
+		// copy value
 		strcpy(value, pDelimiter + 1);
 
+		// removing comments and \n
+		value = cleanValue(value);
 
-		printf("%u:", n);
-		printf("%s=%s\n", key, value);
-
-	}
-	return 0;
-}
-
-short validateValueCharset(char* line) {
-	char charset[] = "0123456789azertyuiopqsdfghjklmwxcvbn\\./\"\n";
-	unsigned short len;
-	len = strlen(line);
-
-	for(int i = 0; i < len; ++i) {
-		if (strchr(charset, line[i]) == NULL) {
-			printf("line[i] = %c \n", line[i]);
+		printf("%u:%s=%s\n", n, key, value);
+		ret = validateKey(key);
+		if (ret != -1) {
+			printf("[Config Error](line %u) : Invalid char '%c' found in key '%s'\n", n, ret, key);
 			return 1;
 		}
+		// ret = validateValueCharset(value);
+		// if (ret != -1) {
+		// 	printf("[Config Error](line %u) : Invalid char '%c' found in value '%s'\n", n, ret, value);
+		// 	return 1;
+		// }
+
+
 	}
 	return 0;
 }
-short validateKeyCharset(char* key) {
+
+char validateKey(char* key) {
 	char charset[] = "azertyuiopqsdfghjklmwxcvbn.\n";
 	unsigned short len;
 	len = strlen(key);
 
 	for(int i = 0; i < len; ++i) {
 		if (strchr(charset, key[i]) == NULL) {
-			printf("key[i] = %c \n", key[i]);
-			return 1;
+			return key[i];
 		}
 	}
-	return 0;
+	return -1;
+}
+char validateValueCharset(char* value) {
+	char charset[] = "0123456789azertyuiopqsdfghjklmwxcvbn\\./\"\n";
+	unsigned short len;
+	len = strlen(value);
+
+	for(int i = 0; i < len; ++i) {
+		if (strchr(charset, value[i]) == NULL) {
+			return value[i];
+		}
+	}
+	return -1;
+}
+
+char* cleanValue(char* value) {
+
+	int len = strlen(value);
+	char* buff = malloc(sizeof(char) * 100);
+
+	for (int i = 0; i < len; ++i) {
+		if (value[i] == '\n' || value[i] == '#') {
+			break;
+		}
+		buff[i] = value[i];
+		
+	}
+	return buff;
 }
