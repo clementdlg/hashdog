@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 		printf("Error: No 'config.json' file found\n");
 		exit(1);
 	} 
-	configParser(config, 0, countC(config));
+	configParser(config);
 	fclose(config);
 
 	// // temporary fallback values :
