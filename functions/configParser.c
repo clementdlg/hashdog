@@ -13,10 +13,10 @@ void printParams(char*** params, unsigned int len);
  * Input : config file as a stream
  * Output : pointer to 2 arrays of string representing key/value pair
 */
-char*** configParser(FILE* config) {
+char*** configParser(FILE* config, unsigned int* nv) {
 
 	unsigned int n = 0; // current file line
-	unsigned int nv = 0; // valid line counter
+	*nv = 0; // valid line counter
 	unsigned short len = 200;
 	int index;
 
@@ -95,14 +95,14 @@ char*** configParser(FILE* config) {
 			return NULL;
 		}
 
-		if (storeParams(key, value, params, nv) == 1) {
+		if (storeParams(key, value, params, *nv) == 1) {
 			printf("[Config Error](line %u) : Duplicate key found, skipping\n", n);
 		} else {
-			nv++;	
+			(*nv)++;
 		}
 
 	}
-	printParams(params, nv); // debug
+	// printParams(params, *nv); // debug
 
 	free(key);
 	free(keyChars);
@@ -188,6 +188,7 @@ char** allocateParam(char** paramList, unsigned int len) {
 	for (unsigned int i = 0; i < len; ++i) {
 		newParam[i] = paramList[i];
 	}
+	free(paramList);
 		
 	return newParam;
 	

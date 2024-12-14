@@ -14,7 +14,13 @@ int main(int argc, char** argv) {
 	char args[] = {'a', 'o', 'm', 'p'};
 	unsigned short nbFlag = strlen(args);
 	char** values = malloc(nbFlag * sizeof(char*));
-	char** params;
+	char*** params;
+	unsigned int* nv = malloc(sizeof(int));
+
+	if (nv == NULL) {
+		printf("Error: Memory allocation failed\n");
+		exit(1);
+	} 
 
 	// check for config file
 	FILE* config = fopen("config", "r");
@@ -23,7 +29,7 @@ int main(int argc, char** argv) {
 		printf("Error: No config file found\n");
 		exit(1);
 	} 
-	params = configParser(config);
+	params = configParser(config, nv);
 	if (params == NULL) {
 		fclose(config);
 		return 1;
@@ -108,6 +114,15 @@ int main(int argc, char** argv) {
 	// TODO: : FREE params -> paramKeys / paramValues
 	fclose(config);
 	
+	printParams(params, *nv);
+
+	//free params
+	for (unsigned int i = 0; i < *nv; i++) {
+		free(params[0][i]);
+	}
+	free(params[0]);
+	free(params[1]);
+	free(params);
 	return 0;
 }
 

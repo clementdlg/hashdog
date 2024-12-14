@@ -7,4 +7,5 @@ int checkDigestCharset(char* password);
 int sha_hash(char *str, char *hash);
 int argParser(int argc, char** argv, char args[], char* values[], unsigned short nbFlag);
 
-char** configParser(FILE* config);
+char*** configParser(FILE* config, unsigned int* nv);
+void printParams(char*** params, unsigned int len);
