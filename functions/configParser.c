@@ -5,23 +5,42 @@
 char validateCharset(char* key, char* charset);
 char* cleanValue(char* value);
 void trim(char* str);
+int storeParams(char* key, char* value, char*** params, unsigned int len);
+char** allocateParam(char** paramList, unsigned int len);
+void printParams(char*** params, unsigned int len);
 
-int configParser(FILE* config) {
+/*
+ * Input : config file as a stream
+ * Output : pointer to 2 arrays of string representing key/value pair
+*/
+char*** configParser(FILE* config) {
 
-	unsigned int n = 0;
+	unsigned int n = 0; // current file line
+	unsigned int nv = 0; // valid line counter
 	unsigned short len = 200;
 	int index;
 
-	char line[len];
+	char line[len]; // current line
 	char ret; // return value
 	char alpha[] = "azertyuiopqsdfghjklmwxcvbn";
 	char nums[] = "0123456789";
 
-	char* key = malloc(sizeof(char) * 100);
-	char* value = malloc(sizeof(char) * 100);
-	char* pDelimiter;
-	char* keyChars = malloc(sizeof(char) * 150);
-	char* valueChars = malloc(sizeof(char) * 150);
+	char* key = malloc(sizeof(char) * 100); //store the current key
+	char* value = malloc(sizeof(char) * 100); //store the current value
+	char* pDelimiter; // store the ptr to the '='
+	
+	char* keyChars = malloc(sizeof(char) * 150); //store the valid key charset
+	char* valueChars = malloc(sizeof(char) * 150); //store the valid value charset
+
+	char*** params = malloc(sizeof(char**) * 2); // this is what we return
+	char** paramKeys = malloc(sizeof(char*)); // this contains all the valid keys
+	char** paramValues = malloc(sizeof(char*)); // this contains all the valid values
+
+	if (params == NULL) {
+		printf("Error: Memory allocation failed\n");
+	}
+	params[0] = paramKeys;
+	params[1] = paramValues;
 
 	// creating key charset
 	strcpy(keyChars, alpha);
@@ -46,7 +65,7 @@ int configParser(FILE* config) {
 		pDelimiter = strchr(line, '=');
 		if (pDelimiter == NULL) {
 			printf("[Config Error](line %u) No key=value pair found in config\n", n);
-			return 1;
+			return NULL;
 		}
 		// index of the '='
 		index = pDelimiter - line;
@@ -61,28 +80,41 @@ int configParser(FILE* config) {
 		// removing comments and \n
 		value = cleanValue(value);
 
-		printf("%u:%s=%s\n", n, key, value);
 
+		// validate key charset
 		ret = validateCharset(key, keyChars);
 		if (ret != -1) {
 			printf("[Config Error](line %u) : Invalid char '%c' found in key '%s'\n", n, ret, key);
-			return 1;
+			return NULL;
 		}
+
+		// validate value charset
 		ret = validateCharset(value, valueChars);
 		if (ret != -1) {
 			printf("[Config Error](line %u) : Invalid char '%c' found in value '%s'\n", n, ret, value);
-			return 1;
+			return NULL;
 		}
 
+		if (storeParams(key, value, params, nv) == 1) {
+			printf("[Config Error](line %u) : Duplicate key found, skipping\n", n);
+		} else {
+			nv++;	
+		}
 
 	}
+	printParams(params, nv); // debug
+
 	free(key);
 	free(keyChars);
 	free(value);
 	free(valueChars);
-	return 0;
+	return params;
 }
 
+/*
+ * Input : key as a string, authorized charset
+ * Output : invalid char or -1 if all good
+ */
 char validateCharset(char* key, char* charset) {
 	unsigned short len;
 	len = strlen(key);
@@ -95,6 +127,10 @@ char validateCharset(char* key, char* charset) {
 	return -1;
 }
 
+/* Purpose : remove '\n' and comments
+ * Input : value as a string
+ * Output : value as a string (cleaned)
+ */
 char* cleanValue(char* value) {
 
 	int len = strlen(value);
@@ -112,3 +148,53 @@ char* cleanValue(char* value) {
 	return buff;
 }
 
+/* Purpose : dynamically building 2 arrays of strings to store key/value pair
+ * Input : key, value, params ptr that stores 2 arrays of string, len that represent the number of parameters
+ * Output : 1 if duplicate was found, 0 if all good
+ */
+int storeParams(char* key, char* value, char*** params, unsigned int len) {
+
+	for (unsigned int i = 0; i < len; ++i) {
+
+		//params[0][i] = all the keys
+		if (strcmp(params[0][i], key) == 0) {
+
+			//duplicate found
+			return 1;
+		}
+	}
+
+	if (len > 1) {
+		// increase by 1 each array of strings
+		params[0] = allocateParam(params[0], len);
+		params[1] = allocateParam(params[1], len);
+	}
+
+	// allocate the size of the string
+	params[0][len] = malloc(sizeof(char) * strlen(key));
+	params[1][len] = malloc(sizeof(char) * strlen(value));
+
+	// write the string to the array
+	strcpy(params[0][len], key);
+	strcpy(params[1][len], value);
+
+	return 0;
+}
+
+char** allocateParam(char** paramList, unsigned int len) {
+	char** newParam = malloc(sizeof(char*) * (len + 1));
+
+	// copying into new param
+	for (unsigned int i = 0; i < len; ++i) {
+		newParam[i] = paramList[i];
+	}
+		
+	return newParam;
+	
+}
+
+void printParams(char*** params, unsigned int len) {
+	for (unsigned int i = 0; i < len; ++i) {
+		printf("%s = %s\n", params[0][i], params[1][i]);
+	}
+}

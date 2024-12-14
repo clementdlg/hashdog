@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
 	char args[] = {'a', 'o', 'm', 'p'};
 	unsigned short nbFlag = strlen(args);
 	char** values = malloc(nbFlag * sizeof(char*));
+	char** params;
 
 	// check for config file
 	FILE* config = fopen("config", "r");
@@ -22,8 +23,11 @@ int main(int argc, char** argv) {
 		printf("Error: No config file found\n");
 		exit(1);
 	} 
-	configParser(config);
-	fclose(config);
+	params = configParser(config);
+	if (params == NULL) {
+		fclose(config);
+		return 1;
+	}
 
 	// // temporary fallback values :
 	// char* fallback[] = {"sha256", "wordlists/rockyou.txt", "dict", ""};
@@ -101,6 +105,9 @@ int main(int argc, char** argv) {
 	//
 	// } else { printf("Error : Unavailable method '%s'\n", values[2]); }
 	//
+	// TODO: : FREE params -> paramKeys / paramValues
+	fclose(config);
+	
 	return 0;
 }
 
