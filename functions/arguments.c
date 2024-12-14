@@ -107,3 +107,35 @@ int argValidate(char args[], char** argValues) {
 
 	return 0;
 }
+
+int fallbackToConfig(char args[], char** argValues, char*** params, unsigned int nv) {
+
+	// falling back on config-file values
+	if (*argVal('a', args, argValues) == NULL) {
+		*argVal('a', args, argValues) = queryConfig(params, nv, "attack.algorithm");
+	}
+	if (*argVal('d', args, argValues) == NULL) {
+		*argVal('d', args, argValues) = queryConfig(params, nv, "path.wordlist");
+	}
+	if (*argVal('m', args, argValues) == NULL) {
+		*argVal('m', args, argValues) = queryConfig(params, nv, "attack.mode");
+	}
+	if (*argVal('c', args, argValues) == NULL) {
+		*argVal('c', args, argValues) = queryConfig(params, nv, "bruteforce.charset");
+	}
+	if (*argVal('s', args, argValues) == NULL) {
+		*argVal('s', args, argValues) = queryConfig(params, nv, "attack.salt");
+	}
+	if (*argVal('t', args, argValues) == NULL) {
+		*argVal('t', args, argValues) = queryConfig(params, nv, "bruteforce.timeout");
+	}	
+	if (*argVal('x', args, argValues) == NULL) {
+		*argVal('x', args, argValues) = queryConfig(params, nv, "bruteforce.length.max");
+	}
+	if (*argVal('n', args, argValues) == NULL) {
+		*argVal('n', args, argValues) = queryConfig(params, nv, "bruteforce.length.min");
+	}
+
+	return 0;
+}
+

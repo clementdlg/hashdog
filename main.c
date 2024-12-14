@@ -54,32 +54,10 @@ int main(int argc, char** argv) {
 	// parsing arguments
 	argParser(argc, argv, args, argValues, nbFlag);
 
-	// falling back on config-file values
-	if (*argVal('a', args, argValues) == NULL) {
-		*argVal('a', args, argValues) = queryConfig(params, *nv, "attack.algorithm");
+	// fallback to default values
+	if (fallbackToConfig(args, argValues, params, *nv) != 0) {
+		return 1;
 	}
-	if (*argVal('d', args, argValues) == NULL) {
-		*argVal('d', args, argValues) = queryConfig(params, *nv, "path.wordlist");
-	}
-	if (*argVal('m', args, argValues) == NULL) {
-		*argVal('m', args, argValues) = queryConfig(params, *nv, "attack.mode");
-	}
-	if (*argVal('c', args, argValues) == NULL) {
-		*argVal('c', args, argValues) = queryConfig(params, *nv, "bruteforce.charset");
-	}
-	if (*argVal('s', args, argValues) == NULL) {
-		*argVal('s', args, argValues) = queryConfig(params, *nv, "attack.salt");
-	}
-	if (*argVal('t', args, argValues) == NULL) {
-		*argVal('t', args, argValues) = queryConfig(params, *nv, "bruteforce.timeout");
-	}	
-	if (*argVal('x', args, argValues) == NULL) {
-		*argVal('x', args, argValues) = queryConfig(params, *nv, "bruteforce.length.max");
-	}
-	if (*argVal('n', args, argValues) == NULL) {
-		*argVal('n', args, argValues) = queryConfig(params, *nv, "bruteforce.length.min");
-	}
-
 	
 	//debug print after fallback
 	// printParams(params, *nv);
@@ -92,15 +70,15 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-
 	printf("\n"); //debug
-	// choice tree
+
+	// Mode
 	if (strcmp(*argVal('m', args, argValues), "dict") == 0) {
 
 		printf("Method : Dictionary Attack\n");
 		printf("Target : %s\n", argValues[3]);
 		printf("Algorithm : %s\n\n", argValues[0]);
-		// dictAtk(argValues[1], argValues[0], argValues[3]);
+		dictAtk(argValues[1], argValues[0], argValues[3]);
 
 	} else  if (strcmp(*argVal('m', args, argValues), "rainbow") == 0) {
 
