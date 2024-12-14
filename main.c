@@ -10,109 +10,128 @@
 // local functions
 int printHelp();
 
-// macros
-#define RESET "\x1b[0m"
-#define BOLD "\x1b[1m"
-#define GREEN "\x1b[32m"
-#define YELLOW "\x1b[33m"
 
 int main(int argc, char** argv) {
 	
-	char args[] = {'a', 'o', 'm', 'p'};
+	char args[] = {'a', 'd', 'm', 'p', 'c', 's', 't', 'x', 'n'}; // defines possible arguments
 	unsigned short nbFlag = strlen(args);
 
-	char** values = malloc(nbFlag * sizeof(char*));
-	if (values == NULL) {
+	char*** params; // hold the config and current args
+
+	char** argValues = malloc(nbFlag * sizeof(char*)); // store all argument values
+	if (argValues == NULL) {
 		printf("Error : Memory allocation failed\n");
 	}
 
-	char*** params;
 
-	unsigned int* nv = malloc(sizeof(int));
+	unsigned int* nv = malloc(sizeof(int)); // number of params
 	if (nv == NULL) {
 		printf("Error: Memory allocation failed\n");
 		exit(1);
 	} 
 
-	// check for config file
+	// exit if no args
+	// if (argc == 1) {
+	// 	printHelp();
+	// 	exit(0);
+	// }
+
+	// initializing config-file
 	FILE* config = fopen("config", "r");
 
 	if (config == NULL) {
 		printf("Error: No config file found\n");
 		exit(1);
 	} 
+
+	// initializing params from config-file
 	params = configParser(config, nv);
 	if (params == NULL) {
 		fclose(config);
 		return 1;
 	}
 
-	// exit if no args
-	if (argc == 1) {
-		printHelp();
-		exit(0);
-	}
-
-	argParser(argc, argv, args, values, nbFlag);
+	// parsing arguments
+	argParser(argc, argv, args, argValues, nbFlag);
 
 	// falling back on config-file values
-	if (values[0] == NULL) {
-		values[0] = queryConfig(params, *nv, "attack.algorithm");
+	if (*argVal('a', args, argValues) == NULL) {
+		*argVal('a', args, argValues) = queryConfig(params, *nv, "attack.algorithm");
 	}
-	// TODO: : Create dedicated param for bruteforce charset
-	if (values[1] == NULL) {
-		values[1] = queryConfig(params, *nv, "path.wordlist");
+	if (*argVal('d', args, argValues) == NULL) {
+		*argVal('d', args, argValues) = queryConfig(params, *nv, "path.wordlist");
 	}
-	if (values[2] == NULL) {
-		values[2] = queryConfig(params, *nv, "attack.mode");
+	if (*argVal('m', args, argValues) == NULL) {
+		*argVal('m', args, argValues) = queryConfig(params, *nv, "attack.mode");
 	}
+	if (*argVal('c', args, argValues) == NULL) {
+		*argVal('c', args, argValues) = queryConfig(params, *nv, "bruteforce.charset");
+	}
+	if (*argVal('s', args, argValues) == NULL) {
+		*argVal('s', args, argValues) = queryConfig(params, *nv, "attack.salt");
+	}
+	if (*argVal('t', args, argValues) == NULL) {
+		*argVal('t', args, argValues) = queryConfig(params, *nv, "bruteforce.timeout");
+	}	
+	if (*argVal('x', args, argValues) == NULL) {
+		*argVal('x', args, argValues) = queryConfig(params, *nv, "bruteforce.length.max");
+	}
+	if (*argVal('n', args, argValues) == NULL) {
+		*argVal('n', args, argValues) = queryConfig(params, *nv, "bruteforce.length.min");
+	}
+
 	
 	//debug print after fallback
 	// printParams(params, *nv);
-	// for (unsigned short i = 0; i < nbFlag; i++) {
-	// 	printf("values[%c] = %s\n", args[i], values[i]);
-	// }
+	for (unsigned short i = 0; i < nbFlag; i++) {
+		printf("-%c = %s\n", args[i], argValues[i]);
+	}
 
 	// # check arguments
 	// check algo
-	if (strcasecmp(values[0], "sha256") != 0 && strcasecmp(values[0], "md5") != 0) {
-		printf("Error : Invalid algorithm '%s'\n", values[0]);
+	if (strcasecmp(*argVal('a', args, argValues), "sha256") != 0 && strcasecmp(*argVal('a', args, argValues), "md5") != 0) {
+		printf("Error : Invalid algorithm '%s'\n", argValues[0]);
 		exit(1);
 	}
 
 	// check digest length
-	if (checkDigest(values[0], values[3]) >= 0) {
+	if (checkDigest(*argVal('a', args, argValues), *argVal('p', args, argValues)) >= 0) {
 		printf("Error : Invalid hash length\n");
 		exit(1);
 	}
 
 	// check digest charset
-	char ret = checkDigestCharset(values[3]);
+	char ret = checkDigestCharset(*argVal('p', args, argValues));
 	if (ret != 0 ){
 		printf("Error: Invalid character '%c' in hash\n", ret);
 		exit(1);
 	}
 
+
 	printf("\n"); //debug
 	// choice tree
-	if (strcmp(values[2], "dict") == 0) {
+	if (strcmp(*argVal('m', args, argValues), "dict") == 0) {
+
 		printf("Method : Dictionary Attack\n");
-		printf("Target : %s\n", values[3]);
-		printf("Algorithm : %s\n\n", values[0]);
-		dictAtk(values[1], values[0], values[3]);
+		printf("Target : %s\n", argValues[3]);
+		printf("Algorithm : %s\n\n", argValues[0]);
+		// dictAtk(argValues[1], argValues[0], argValues[3]);
 
-	} else  if (strcmp(values[2], "rainbow") == 0) {
+	} else  if (strcmp(*argVal('m', args, argValues), "rainbow") == 0) {
 
-		printf("Method : Rainbo table Attack\n");
+		printf("Method : Rainbow table Attack\n");
 
-	} else  if (strcmp(values[2], "bruteforce") == 0) {
+	} else  if (strcmp(*argVal('m', args, argValues), "bruteforce") == 0) {
 		printf("Method : Bruteforce Attack\n");
 		
-		// bruteforce(values[1], values[0], unsigned int maxLength, unsigned int minLength) {
+		// bruteforce(*argVal('c', args, argValues), *argVal('a', args, argValues), *argVal('x', args, argValues), *argVal('n', args, argValues));
 
-	} else { printf("Error : Unavailable method '%s'\n", values[2]); }
+	} else { printf("Error : Unavailable method '%s'\n", argValues[2]); }
 
+	// for Mr. Sananes
 	fclose(config);
+
+	free(argValues);
 
 	//free params
 	for (unsigned int i = 0; i < *nv; i++) {
@@ -121,6 +140,7 @@ int main(int argc, char** argv) {
 	free(params[0]);
 	free(params[1]);
 	free(params);
+	free(nv);
 	return 0;
 }
 
