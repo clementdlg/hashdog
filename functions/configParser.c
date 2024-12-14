@@ -4,7 +4,6 @@
 
 char validateCharset(char* key, char* charset);
 char* cleanValue(char* value);
-void trim(char* str);
 int storeParams(char* key, char* value, char*** params, unsigned int len);
 char** allocateParam(char** paramList, unsigned int len);
 void printParams(char*** params, unsigned int len);

@@ -13,13 +13,8 @@ int printHelp();
 // macros
 #define RESET "\x1b[0m"
 #define BOLD "\x1b[1m"
-#define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
-#define BLUE "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN "\x1b[36m"
-#define WHITE "\x1b[37m"
 
 int main(int argc, char** argv) {
 	
@@ -73,9 +68,9 @@ int main(int argc, char** argv) {
 	
 	//debug print after fallback
 	// printParams(params, *nv);
-	for (unsigned short i = 0; i < nbFlag; i++) {
-		printf("values[%c] = %s\n", args[i], values[i]);
-	}
+	// for (unsigned short i = 0; i < nbFlag; i++) {
+	// 	printf("values[%c] = %s\n", args[i], values[i]);
+	// }
 
 	// # check arguments
 	// check algo
@@ -97,25 +92,23 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	printf("\n");
-	// // choice tree
-	// if (strcmp(values[2], "dict") == 0) {
-	// 	printf("Method : Dictionary Attack\n");
-	// 	printf("Target : %s\n", values[3]);
-	// 	printf("Algorithm : %s\n\n", values[0]);
-	// 	dictAtk(values[1], values[0], values[3]);
-	//
-	// } else  if (strcmp(values[2], "rainbow") == 0) {
-	//
-	// 	printf("Method : Rainbow table Attack\n");
-	//
-	// } else  if (strcmp(values[2], "bruteforce") == 0) {
-	// 	printf("Method : Bruteforce Attack\n");
-	// 	dictAtk(values[1], values[0], values[3]);
-	//
-	// } else { printf("Error : Unavailable method '%s'\n", values[2]); }
-	//
-	// TODO: : FREE params -> paramKeys / paramValues
+	printf("\n"); //debug
+	// choice tree
+	if (strcmp(values[2], "dict") == 0) {
+		printf("Method : Dictionary Attack\n");
+		printf("Target : %s\n", values[3]);
+		printf("Algorithm : %s\n\n", values[0]);
+		dictAtk(values[1], values[0], values[3]);
+
+	} else  if (strcmp(values[2], "rainbow") == 0) {
+
+		printf("Method : Rainbow table Attack\n");
+
+	} else  if (strcmp(values[2], "bruteforce") == 0) {
+		printf("Method : Bruteforce Attack\n");
+		dictAtk(values[1], values[0], values[3]);
+
+	} else { printf("Error : Unavailable method '%s'\n", values[2]); }
 
 	fclose(config);
 
