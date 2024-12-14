@@ -8,6 +8,7 @@ void trim(char* str);
 int storeParams(char* key, char* value, char*** params, unsigned int len);
 char** allocateParam(char** paramList, unsigned int len);
 void printParams(char*** params, unsigned int len);
+char* stringVerify(char* value);
 
 /*
  * Input : config file as a stream
@@ -80,23 +81,29 @@ char*** configParser(FILE* config, unsigned int* nv) {
 		// removing comments and \n
 		value = cleanValue(value);
 
+		// string verif
+		value = stringVerify(value);
+		if (value == NULL) {
+			printf("[Config Error](line %u) : Malformed string\n", n);
+		}
 
 		// validate key charset
 		ret = validateCharset(key, keyChars);
 		if (ret != -1) {
 			printf("[Config Error](line %u) : Invalid char '%c' found in key '%s'\n", n, ret, key);
-			return NULL;
+			continue;
 		}
 
 		// validate value charset
 		ret = validateCharset(value, valueChars);
 		if (ret != -1) {
 			printf("[Config Error](line %u) : Invalid char '%c' found in value '%s'\n", n, ret, value);
-			return NULL;
+			continue;
 		}
 
 		if (storeParams(key, value, params, *nv) == 1) {
 			printf("[Config Error](line %u) : Duplicate key found, skipping\n", n);
+			continue;
 		} else {
 			(*nv)++;
 		}
@@ -134,8 +141,11 @@ char validateCharset(char* key, char* charset) {
 char* cleanValue(char* value) {
 
 	int len = strlen(value);
-	char* buff = malloc(sizeof(char) * 100);
 	int i;
+	char* buff = malloc(sizeof(char) * 100);
+	if (buff == NULL) {
+		printf("Error: Memory allocation failed\n");
+	}
 
 	for (i = 0; i < len; ++i) {
 		if (value[i] == '\n' || value[i] == '#') {
@@ -143,9 +153,31 @@ char* cleanValue(char* value) {
 			break;
 		}
 		buff[i] = value[i];
-		
 	}
+	free(value);
+
 	return buff;
+}
+
+char* stringVerify(char* value) {
+	int i;
+
+	// check if str start with quote
+	if (value[0] != '"') {
+		return value;
+	}
+
+	// check if str ends with quote
+	if (value[strlen(value) - 1] != '"') {
+		return NULL;
+	}
+
+	// remove quotes
+	for (i = 0; i < strlen(value) - 1; ++i) {
+		value[i] = value[i+1];
+	}
+	value[strlen(value) - 2] = '\0';
+	return value;
 }
 
 /* Purpose : dynamically building 2 arrays of strings to store key/value pair
@@ -189,13 +221,22 @@ char** allocateParam(char** paramList, unsigned int len) {
 		newParam[i] = paramList[i];
 	}
 	free(paramList);
-		
+
 	return newParam;
-	
+
 }
 
 void printParams(char*** params, unsigned int len) {
 	for (unsigned int i = 0; i < len; ++i) {
 		printf("%s = %s\n", params[0][i], params[1][i]);
 	}
+}
+
+char* queryConfig(char*** params, unsigned int len, char* key) {
+	for (unsigned int i = 0; i < len; ++i) {
+		if (strcmp(params[0][i], key) == 0) {
+			return params[1][i];
+		}
+	}
+	return NULL;
 }

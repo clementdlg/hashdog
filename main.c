@@ -7,16 +7,33 @@
 // internal libs
 #include "functions.h"
 
-// int printHelp();
+// local functions
+int printHelp();
+
+// macros
+#define RESET "\x1b[0m"
+#define BOLD "\x1b[1m"
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN "\x1b[36m"
+#define WHITE "\x1b[37m"
 
 int main(int argc, char** argv) {
 	
 	char args[] = {'a', 'o', 'm', 'p'};
 	unsigned short nbFlag = strlen(args);
-	char** values = malloc(nbFlag * sizeof(char*));
-	char*** params;
-	unsigned int* nv = malloc(sizeof(int));
 
+	char** values = malloc(nbFlag * sizeof(char*));
+	if (values == NULL) {
+		printf("Error : Memory allocation failed\n");
+	}
+
+	char*** params;
+
+	unsigned int* nv = malloc(sizeof(int));
 	if (nv == NULL) {
 		printf("Error: Memory allocation failed\n");
 		exit(1);
@@ -35,65 +52,52 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	// // temporary fallback values :
-	// char* fallback[] = {"sha256", "wordlists/rockyou.txt", "dict", ""};
-	// if (values == NULL) {
-	// 	printf("Error : Memory allocation failed\n");
-	// }
-	//
-	// // exit if no args
-	// if (argc == 1) {
-	// 	// printHelp();
-	// 	exit(0);
-	// }
-	//
-	// argParser(argc, argv, args, values, nbFlag);
-	//
-	// // falling back on default values
-	// for (unsigned short i = 0; i < nbFlag; i++) {
-	//
-	// 	// if user did not provided an argument
-	// 	if (values[i] == NULL ) {
-	//
-	// 		// allocate memory for the value
-	// 		values[i] = malloc(strlen(fallback[i] + 1));
-	// 
-	// 		if (values[i] == NULL) {
-	// 			printf("Error: Memory allocation failed\n");
-	// 		}
-	//
-	// 		// copy the default value to it
-	// 		strcpy(values[i], fallback[i]);
-	// 	}
-	// }
-	// //debug
-	// for (unsigned short i = 0; i < nbFlag; i++) {
-	// 	if (values[i] != NULL) {
-	// 		printf("values[%c] = %s\n", args[i], values[i]);
-	// 	}
-	// }
-	//
-	// // # check arguments
-	// // check algo
-	// if (strcasecmp(values[0], "sha256") != 0 && strcasecmp(values[0], "md5") != 0) {
-	// 	printf("Error : Invalid algorithm '%s'\n", values[0]);
-	// 	exit(1);
-	// }
-	//
-	// // check digest length
-	// if (checkDigest(values[0], values[3]) >= 0) {
-	// 	printf("Error : Invalid hash length\n");
-	// 	exit(1);
-	// }
-	//
-	// // check digest charset
-	// char ret = checkDigestCharset(values[3]);
-	// if (ret != 0 ){
-	// 	printf("Error: Invalid character '%c' in hash\n", ret);
-	// 	exit(1);
-	// }
-	//
-	// printf("\n");
+	// exit if no args
+	if (argc == 1) {
+		printHelp();
+		exit(0);
+	}
+
+	argParser(argc, argv, args, values, nbFlag);
+
+	// falling back on config-file values
+	if (values[0] == NULL) {
+		values[0] = queryConfig(params, *nv, "attack.algorithm");
+	}
+	if (values[1] == NULL) {
+		values[1] = queryConfig(params, *nv, "path.wordlist");
+	}
+	if (values[2] == NULL) {
+		values[2] = queryConfig(params, *nv, "attack.mode");
+	}
+	
+	//debug print after fallback
+	// printParams(params, *nv);
+	for (unsigned short i = 0; i < nbFlag; i++) {
+		printf("values[%c] = %s\n", args[i], values[i]);
+	}
+
+	// # check arguments
+	// check algo
+	if (strcasecmp(values[0], "sha256") != 0 && strcasecmp(values[0], "md5") != 0) {
+		printf("Error : Invalid algorithm '%s'\n", values[0]);
+		exit(1);
+	}
+
+	// check digest length
+	if (checkDigest(values[0], values[3]) >= 0) {
+		printf("Error : Invalid hash length\n");
+		exit(1);
+	}
+
+	// check digest charset
+	char ret = checkDigestCharset(values[3]);
+	if (ret != 0 ){
+		printf("Error: Invalid character '%c' in hash\n", ret);
+		exit(1);
+	}
+
+	printf("\n");
 	// // choice tree
 	// if (strcmp(values[2], "dict") == 0) {
 	// 	printf("Method : Dictionary Attack\n");
@@ -112,9 +116,8 @@ int main(int argc, char** argv) {
 	// } else { printf("Error : Unavailable method '%s'\n", values[2]); }
 	//
 	// TODO: : FREE params -> paramKeys / paramValues
+
 	fclose(config);
-	
-	printParams(params, *nv);
 
 	//free params
 	for (unsigned int i = 0; i < *nv; i++) {
@@ -127,20 +130,25 @@ int main(int argc, char** argv) {
 }
 
 
-// int printHelp() {
-// 	printf("This program performs attacks on a hashed password\n");
-// 	printf("It takes the following arguments :\n");
-// 	printf("-m : Method\n");
-// 	printf("    'dict', 'rainbow' or 'bruteforce'\n\n");
-//
-// 	printf("-p : Hashed password\n\n");
-// 	printf("-a : Hashing algorithm ('md5' or 'sha256')\n\n");
-// 	printf("-o : Options :\n");
-// 	printf("  - For dict method, provide a wordlist file\n");
-// 	printf("  - For bruteforce method, provide a charcter-set\n");
-// 	printf("    'n' for numbers, 'l' for lowercase, 'u' for uppercase, 's' for symbols\n");
-// 	printf("    Example : nsl for number + symbols + lowercase characters\n\n");
-//
-// 	return 0;
-// }
-//
+int printHelp() {
+	    printf(BOLD YELLOW "This program performs attacks on a hashed password\n" RESET);
+    printf(BOLD YELLOW "It takes the following arguments :\n" RESET);
+
+    printf(BOLD GREEN "-m : Method\n" RESET);
+    printf("    'dict', 'rainbow' or 'bruteforce'\n\n" );
+
+    printf(BOLD GREEN "-p : Hashed password\n\n" RESET);
+    printf("  Example : '5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8'\n\n");
+
+    printf(BOLD GREEN "-a : Hashing algorithm\n" RESET);
+    printf("  Currently supported : 'md5' or 'sha256'\n\n");
+
+    printf(BOLD GREEN "-o : Options :\n" RESET);
+    printf("  - For dict method, provide a wordlist file\n");
+    printf("  - For bruteforce method, provide a character-set\n");
+    printf("    'n' for numbers, 'l' for lowercase, 'u' for uppercase, 's' for symbols\n");
+    printf("    Example : nsl for number + symbols + lowercase characters\n\n");
+
+	return 0;
+}
+

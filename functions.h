@@ -9,3 +9,4 @@ int argParser(int argc, char** argv, char args[], char* values[], unsigned short
 
 char*** configParser(FILE* config, unsigned int* nv);
 void printParams(char*** params, unsigned int len);
+char* queryConfig(char*** params, unsigned int len, char* key);
