@@ -53,3 +53,13 @@ int argParser(int argc, char** argv, char args[], char* values[], unsigned short
 	return 0;
 }
 
+char* argVal(char c, char args[], char** argValues) {
+	int len = strlen(args);
+
+	for (unsigned int i = 0; i < len; ++i) {
+		if (args[i] == c) {
+			return argValues[i];
+		}
+	}
+	return NULL;
+}
