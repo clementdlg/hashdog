@@ -87,24 +87,9 @@ int main(int argc, char** argv) {
 		printf("-%c = %s\n", args[i], argValues[i]);
 	}
 
-	// # check arguments
-	// check algo
-	if (strcasecmp(*argVal('a', args, argValues), "sha256") != 0 && strcasecmp(*argVal('a', args, argValues), "md5") != 0) {
-		printf("Error : Invalid algorithm '%s'\n", argValues[0]);
-		exit(1);
-	}
-
-	// check digest length
-	if (checkDigest(*argVal('a', args, argValues), *argVal('p', args, argValues)) >= 0) {
-		printf("Error : Invalid hash length\n");
-		exit(1);
-	}
-
-	// check digest charset
-	char ret = checkDigestCharset(*argVal('p', args, argValues));
-	if (ret != 0 ){
-		printf("Error: Invalid character '%c' in hash\n", ret);
-		exit(1);
+	// validating arguments
+	if (argValidate(args, argValues) != 0) {
+		return 1;
 	}
 
 

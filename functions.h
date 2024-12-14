@@ -7,14 +7,15 @@ int checkDigest(char* algo, char* password);
 int checkDigestCharset(char* password);
 int sha_hash(char *str, char *hash);
 
-// parsing
+// 'arguments.c'
 int argParser(int argc, char** argv, char args[], char* values[], unsigned short nbFlag);
-char*** configParser(FILE* config, unsigned int* nv);
+int argValidate(char args[], char** argValues);
+char** argVal(char c, char args[], char ** argValues);
 
-// parsing utilitaries
+// 'config.c'
+char*** configParser(FILE* config, unsigned int* nv);
 void printParams(char*** params, unsigned int len);
 char* queryConfig(char*** params, unsigned int len, char* key);
-char** argVal(char c, char args[], char ** argValues);
 
 // macros
 #define RESET "\x1b[0m"

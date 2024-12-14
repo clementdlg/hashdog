@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../functions.h"
+
 /* Input : main function argument-count and argument-value
  *		   array of strings (type char**) and max number of flags
  *
@@ -62,4 +64,46 @@ char** argVal(char c, char args[], char** argValues) {
 		}
 	}
 	return NULL;
+}
+
+int argValidate(char args[], char** argValues) {
+
+	// check digest length
+	if (checkDigest(*argVal('a', args, argValues), *argVal('p', args, argValues)) >= 0) {
+		printf("Error : Invalid hash length\n");
+		exit(1);
+	}
+
+	// check digest charset
+	char ret = checkDigestCharset(*argVal('p', args, argValues));
+	if (ret != 0 ){
+		printf("Error: Invalid character '%c' in hash\n", ret);
+		exit(1);
+	}
+
+	// validating hashing algorithm 
+	char* validAlgos[] = {"md5", "sha256"};
+	char isValid = 0;
+
+	for (int i = 0; i < 2; ++i) {
+		if (strcmp(*argVal('a', args, argValues), validAlgos[i]) == 0) {
+			isValid = 1;
+		}
+	}
+	if (isValid == 0) {
+		printf("Error: Unsupported hashing algorithm '%s'\n", *argVal('a', args, argValues));
+		exit(1);
+	}
+
+	// validating salt file
+	if (strcmp(*argVal('s', args, argValues), "") != 0) {
+		FILE* salt = fopen(*argVal('s', args, argValues), "r");
+		if (salt == NULL) {
+			printf("Error: Can not open file '%s'\n", *argVal('s', args, argValues));
+			exit(1);
+
+		}
+	}
+
+	return 0;
 }

@@ -23,7 +23,7 @@ int dictAtk(char dict[255], char algo[7], char target[255]){
 	// setting a ptr to the data
 	FILE *pDict = fopen(dict, "r");
 
-	// avoid null ptr dereference
+	// check local arguments
 	if (pDict == NULL) {
 		printf("Error: wordlist '%s' doesn't exist\n", dict);
 		exit(1);
@@ -42,10 +42,10 @@ int dictAtk(char dict[255], char algo[7], char target[255]){
 			sha_hash(buffer, hash);
 
 		} else if (strcasecmp(algo, "md5") == 0) {
-			printf("Not implemented yet\n");
+			printf("Implemented soon\n");
 			return 1;
-		}
 
+		}
 		if (strcasecmp(hash, target) == 0) {
 			printf("Tried : %u words\n", count);
 			printf("Found password : %s\n", buffer);
