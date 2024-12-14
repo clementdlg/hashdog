@@ -59,6 +59,7 @@ int main(int argc, char** argv) {
 	if (values[0] == NULL) {
 		values[0] = queryConfig(params, *nv, "attack.algorithm");
 	}
+	// TODO: : Create dedicated param for bruteforce charset
 	if (values[1] == NULL) {
 		values[1] = queryConfig(params, *nv, "path.wordlist");
 	}
@@ -102,11 +103,12 @@ int main(int argc, char** argv) {
 
 	} else  if (strcmp(values[2], "rainbow") == 0) {
 
-		printf("Method : Rainbow table Attack\n");
+		printf("Method : Rainbo table Attack\n");
 
 	} else  if (strcmp(values[2], "bruteforce") == 0) {
 		printf("Method : Bruteforce Attack\n");
-		dictAtk(values[1], values[0], values[3]);
+		
+		// bruteforce(values[1], values[0], unsigned int maxLength, unsigned int minLength) {
 
 	} else { printf("Error : Unavailable method '%s'\n", values[2]); }
 
@@ -124,7 +126,7 @@ int main(int argc, char** argv) {
 
 
 int printHelp() {
-	    printf(BOLD YELLOW "This program performs attacks on a hashed password\n" RESET);
+	    printf(BOLD YELLOW "This program performs attacks on a hashed passord\n" RESET);
     printf(BOLD YELLOW "It takes the following arguments :\n" RESET);
 
     printf(BOLD GREEN "-m : Method\n" RESET);
