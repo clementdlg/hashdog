@@ -11,7 +11,7 @@ attack.algorithm="sha256"
 bruteforce.timeout=600
 bruteforce.length.max=20
 bruteforce.length.min=0
-bruteforce.charset="lnu"
+bruteforce.charset="nlu"
 
 # Default paths
 path.wordlist="wordlists/rockyou.txt"

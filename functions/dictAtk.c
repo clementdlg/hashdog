@@ -51,6 +51,8 @@ int dictAtk(char dict[255], char algo[7], char target[255]){
 			printf("Found password : %s\n", buffer);
 			free(hash);
 			return 0;
+		} else {
+			printf("[Try] %s = %s\n", buffer, hash);
 		}
 		free(hash);
 

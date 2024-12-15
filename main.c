@@ -61,9 +61,9 @@ int main(int argc, char** argv) {
 	
 	//debug print after fallback
 	// printParams(params, *nv);
-	for (unsigned short i = 0; i < nbFlag; i++) {
-		printf("-%c = %s\n", args[i], argValues[i]);
-	}
+	// for (unsigned short i = 0; i < nbFlag; i++) {
+	// 	printf("-%c = %s\n", args[i], argValues[i]);
+	// }
 
 	// validating arguments
 	if (argValidate(args, argValues) != 0) {
@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
 	} else  if (strcmp(*argVal('m', args, argValues), "bruteforce") == 0) {
 		printf("Method : Bruteforce Attack\n");
 		
-		// bruteforce(*argVal('c', args, argValues), *argVal('a', args, argValues), *argVal('x', args, argValues), *argVal('n', args, argValues));
+		bruteforce(*argVal('c', args, argValues), *argVal('a', args, argValues), *argVal('x', args, argValues), *argVal('n', args, argValues), *argVal('p', args, argValues));
 
 	} else { printf("Error : Unavailable method '%s'\n", argValues[2]); }
 

@@ -2,7 +2,7 @@ NAME	=	hashdog
 
 SRC		=	main.c						\
 			functions/arguments.c		\
-			functions/bruteforceAtk.c	\
+			functions/bruteforce.c		\
 			functions/checkDigest.c		\
 			functions/dictAtk.c			\
 			functions/config.c
