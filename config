@@ -9,8 +9,8 @@ attack.algorithm="sha256"
 
 # Bruteforce settings
 bruteforce.timeout=600
-bruteforce.length.max=20
-bruteforce.length.min=0
+bruteforce.length.max=8
+bruteforce.length.min=6
 bruteforce.charset="nlu"
 
 # Default paths

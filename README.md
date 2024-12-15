@@ -7,7 +7,7 @@ partial reimplementation of Hashcat with a GUI
 make
 ```
 
-# Demo
+# How-To
 ## dictionnary
 - you specifty a wordlist (some are available in `wordlists/`)
 - you choose a hashing algorithm (sha256, md5)

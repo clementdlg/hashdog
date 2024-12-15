@@ -7,7 +7,7 @@
 char* makeCharset(char* charset, char* sumchar);
 void generateCombinations(const char *charset, char *current, int position, int length, char *algo, char* target);
 
-char* bruteforce(char* argCharset, char* algo, char* maxStr, char* minStr, char* target){
+int bruteforce(char* argCharset, char* algo, char* maxStr, char* minStr, char* target) {
 	// char* pass = malloc(sizeof(char) * minLength);
 
 	char* charset = malloc(sizeof(char) * 90);
@@ -24,18 +24,24 @@ char* bruteforce(char* argCharset, char* algo, char* maxStr, char* minStr, char*
 	// string to long
 	min = strtol(minStr, &end, 10);
 	if (*end != '\0') { // if strtol() fails
-		printf("[Config Error] bruteforce.length.min : cannot convert to integer\n");
+		printf("Error: bruteforce.length.min : cannot convert to integer\n");
 		exit(1);
 	}
 
 	max = strtol(maxStr, &end, 10);
 	if (*end != '\0') {
-		printf("[Config Error] bruteforce.length.max : cannot convert to integer\n");
+		printf("Error: bruteforce.length.max : cannot convert to integer\n");
 		exit(1);
 	}
 
 	char current[max + 1];
-	printf("min = %d; max = %d\n",min, max); // debug
+	printf("From %d charaters to %d characters\n",min, max); // debug
+	// verifying mix and max
+	if (max < min) {
+		printf("Error: bruteforce.length.max cannot be greater than bruteforce.length.min\n");
+		return 1;
+	}
+
 
 	for(int i = min; i <= max; i ++) {
 		generateCombinations(charset, current, 0, i, algo, target);
