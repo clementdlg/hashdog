@@ -1,13 +1,13 @@
-# projet-c
+# Hashdog
 partial reimplementation of Hashcat with a GUI
 
-# compiling
+# Compiling
 - a Makefile is used to compile the project. Just run :
 ```
 make
 ```
 
-# demo
+# Demo
 ## dictionnary
 - you specifty a wordlist (some are available in `wordlists/`)
 - you choose a hashing algorithm (sha256, md5)
