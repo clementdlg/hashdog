@@ -31,10 +31,10 @@ int main(int argc, char** argv) {
 	} 
 
 	// exit if no args
-	// if (argc == 1) {
-	// 	printHelp();
-	// 	exit(0);
-	// }
+	if (argc == 1) {
+		printHelp();
+		exit(0);
+	}
 
 	// initializing config-file
 	FILE* config = fopen("config", "r");
@@ -109,23 +109,37 @@ int main(int argc, char** argv) {
 
 
 int printHelp() {
-	    printf(BOLD YELLOW "This program performs attacks on a hashed passord\n" RESET);
-    printf(BOLD YELLOW "It takes the following arguments :\n" RESET);
+	// char args[] = {'a', 'd', 'm', 'p', 'c', 's', 't', 'x', 'n'}; // defines possible arguments
+	printf(BOLD YELLOW "This program performs attacks on a hashed passord\n" RESET);
+	printf(BOLD YELLOW "It takes the following arguments :\n" RESET);
 
-    printf(BOLD GREEN "-m : Method\n" RESET);
-    printf("    'dict', 'rainbow' or 'bruteforce'\n\n" );
+	printf(BOLD GREEN "-p : Hashed password\n\n" RESET);
+	printf("  Example : '5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8'\n\n");
 
-    printf(BOLD GREEN "-p : Hashed password\n\n" RESET);
-    printf("  Example : '5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8'\n\n");
+	printf(BOLD GREEN "-m : Methode\n" RESET);
+	printf("    'dict', 'bruteforce'\n\n" );
 
-    printf(BOLD GREEN "-a : Hashing algorithm\n" RESET);
-    printf("  Currently supported : 'md5' or 'sha256'\n\n");
+	printf(BOLD GREEN "-a : Hashing algorithm\n" RESET);
+	printf("  Currently supported : 'md5' or 'sha256'\n\n");
 
-    printf(BOLD GREEN "-o : Options :\n" RESET);
-    printf("  - For dict method, provide a wordlist file\n");
-    printf("  - For bruteforce method, provide a character-set\n");
-    printf("    'n' for numbers, 'l' for lowercase, 'u' for uppercase, 's' for symbols\n");
-    printf("    Example : nsl for number + symbols + lowercase characters\n\n");
+	printf(BOLD GREEN "-d : Dictionnary [dict]\n" RESET);
+	printf("  - Provides a wordlist file for a dictionnary attack\n\n");
+
+	printf(BOLD GREEN "-c : Character-set [bruteforce]\n" RESET);
+	printf("  - Provides a character set for a bruteforce attack\n");
+	printf("  - 'n' : numbers [0-9]\n");
+	printf("  - 'l' : lowercase letters [abc]\n");
+	printf("  - 'u' : uppercase letters [ABC]\n");
+	printf("  Example: 'ln' for lowercase + numbers\n\n");
+
+	printf(BOLD GREEN "-s : Salt\n" RESET);
+	printf("  - allows to use a salt to try on the password\n\n");
+
+	printf(BOLD GREEN "-n : Minimum length [bruteforce]\n" RESET);
+	printf("  - When in bruteforce mode, this is the base number of characters\n\n");
+
+	printf(BOLD GREEN "-x : Max length [bruteforce]\n" RESET);
+	printf("  - When in bruteforce mode, this is the max number of characters\n\n");
 
 	return 0;
 }
